@@ -1490,7 +1490,7 @@
         min-width: 0;
         flex: 1 1 0;
         padding-inline: 10px;
-        font-size: .82rem;
+        font-size: .76rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1525,23 +1525,633 @@
     @media (prefers-reduced-motion: reduce) {
       .feed { scroll-behavior: auto; }
     }
+
+
+    /* Compact top navigation and fixed bottom feed tabs */
+    :root {
+      --nav-h: 64px;
+      --bottom-nav-h: 66px;
+    }
+
+    .app-header {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-rows: auto;
+      grid-template-areas: "brand search actions";
+      align-content: center;
+      height: auto;
+      min-height: 0;
+      padding: max(8px, env(safe-area-inset-top)) clamp(10px, 2vw, 24px) 8px;
+      gap: clamp(8px, 1.4vw, 18px);
+    }
+
+    .brand { grid-area: brand; }
+    .search-form {
+      grid-area: search;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+    }
+    .header-actions { grid-area: actions; }
+
+    .mode-bar {
+      position: fixed;
+      z-index: 60;
+      inset: auto 0 0 0;
+      width: 100%;
+      min-height: var(--bottom-nav-h);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: center;
+      gap: 6px;
+      padding:
+        8px
+        max(12px, calc((100vw - 720px) / 2))
+        max(8px, env(safe-area-inset-bottom));
+      overflow: visible;
+      background: color-mix(in srgb, var(--bg) 91%, transparent);
+      border: 0;
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -10px 34px rgba(0, 0, 0, .22);
+      backdrop-filter: blur(22px) saturate(145%);
+    }
+
+    .mode-button {
+      width: 100%;
+      min-width: 0;
+      height: 44px;
+      min-height: 44px;
+      padding: 0 10px;
+      border-radius: 14px 6px 14px 6px;
+      font-size: .86rem;
+      white-space: nowrap;
+    }
+
+    .feed { inset: var(--nav-h) 0 var(--bottom-nav-h); }
+    .feed-card { min-height: calc(100dvh - var(--nav-h) - var(--bottom-nav-h)); }
+    .repo-shell {
+      min-height: min(720px, calc(100dvh - var(--nav-h) - var(--bottom-nav-h) - 28px));
+      max-height: calc(100dvh - var(--nav-h) - var(--bottom-nav-h) - 20px);
+    }
+    .position-indicator { bottom: calc(var(--bottom-nav-h) + 14px); }
+    .music-panel { top: calc(var(--nav-h) + 10px); }
+
+    @media (max-width: 760px) {
+      :root { --nav-h: 52px; --bottom-nav-h: 64px; }
+
+      .app-header {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-rows: auto;
+        grid-template-areas: "brand search actions";
+        padding: max(7px, env(safe-area-inset-top)) 8px 7px;
+        gap: 4px;
+      }
+
+      .brand-text {
+        display: inline !important;
+        font-size: .98rem;
+        letter-spacing: -.055em;
+      }
+
+      .search-form { min-width: 0; }
+      .search-input {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 0 30px 0 31px;
+        border-radius: 12px;
+        font-size: .82rem;
+      }
+      .search-form > svg {
+        left: 10px;
+        width: 15px;
+        height: 16px;
+      }
+      .search-clear {
+        right: 2px;
+        width: 28px;
+        height: 28px;
+      }
+      .search-submit { display: none; }
+
+      .header-actions {
+        justify-self: end;
+        grid-auto-columns: 30px;
+        gap: 2px;
+      }
+      .header-actions .icon-button {
+        display: inline-grid !important;
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+      }
+      .header-actions .icon-button svg { width: 16px; height: 16px; }
+
+      .mode-bar {
+        gap: 4px;
+        padding: 7px 8px max(7px, env(safe-area-inset-bottom));
+      }
+      .mode-button {
+        height: 42px;
+        min-height: 42px;
+        padding-inline: 4px;
+        border-radius: 13px 5px 13px 5px;
+        font-size: clamp(.72rem, 3.25vw, .82rem);
+      }
+
+      .feed-card {
+        min-height: calc(100dvh - var(--nav-h) - var(--bottom-nav-h));
+        padding: 8px;
+      }
+      .repo-shell {
+        min-height: calc(100dvh - var(--nav-h) - var(--bottom-nav-h) - 16px);
+        max-height: calc(100dvh - var(--nav-h) - var(--bottom-nav-h) - 16px);
+      }
+      .music-panel { top: calc(var(--nav-h) + 6px); }
+    }
+
+    @media (max-width: 350px) {
+      .header-actions .icon-button:first-child { display: none !important; }
+      .brand-text { font-size: .96rem; }
+      .header-actions { grid-auto-columns: 31px; gap: 2px; }
+      .header-actions .icon-button { width: 31px; height: 31px; }
+      .search-input { font-size: .76rem; padding-left: 31px; }
+    }
+
+    @media (orientation: landscape) and (max-height: 540px) {
+      :root { --bottom-nav-h: 50px; }
+      .app-header {
+        grid-template-columns: auto minmax(180px, 1fr) auto;
+        grid-template-rows: auto;
+        grid-template-areas: "brand search actions";
+        padding-block: 5px;
+      }
+      .mode-bar {
+        min-height: var(--bottom-nav-h);
+        padding-top: 4px;
+        padding-bottom: max(4px, env(safe-area-inset-bottom));
+      }
+      .mode-button { height: 36px; min-height: 36px; }
+    }
+
+
+    /* TikTok-style creator rail: profile first, then repository actions. */
+    .repo-shell {
+      grid-template-columns: minmax(0, 1fr) clamp(94px, 7vw, 108px);
+    }
+
+    .repo-topline {
+      min-height: 42px;
+    }
+
+    .side-actions {
+      justify-content: center;
+      gap: clamp(12px, 1.8vh, 19px);
+      padding: 18px 8px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .side-actions::-webkit-scrollbar { display: none; }
+
+    .creator-profile {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .66rem;
+      font-weight: 780;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .creator-avatar-frame {
+      width: 62px;
+      height: 62px;
+      padding: 3px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--primary), var(--primary-2));
+      box-shadow: 0 10px 28px color-mix(in srgb, var(--primary) 28%, transparent);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .creator-avatar {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border: 3px solid var(--surface-solid);
+      border-radius: 50%;
+      background: var(--surface-2);
+    }
+
+    .creator-profile:hover .creator-avatar-frame,
+    .creator-profile:focus-visible .creator-avatar-frame {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 13px 32px color-mix(in srgb, var(--primary) 36%, transparent);
+    }
+
+    .creator-handle {
+      width: 100%;
+      max-width: 82px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .side-actions .stat-action {
+      width: 100%;
+      flex: 0 0 auto;
+    }
+
+    .side-actions .stat-icon {
+      border-radius: 50%;
+    }
+
+    .open-action .stat-icon {
+      color: white;
+      border-color: color-mix(in srgb, var(--primary-2) 34%, var(--primary) 38%);
+      background: linear-gradient(145deg, var(--primary), var(--primary-strong) 72%, color-mix(in srgb, var(--primary-2) 28%, var(--primary-strong)));
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--primary) 24%, transparent);
+    }
+
+    .repo-actions {
+      justify-content: flex-start;
+    }
+
+    @media (max-width: 1040px) and (min-width: 761px) {
+      .repo-shell { grid-template-columns: minmax(0, 1fr) 92px; }
+      .creator-avatar-frame { width: 56px; height: 56px; }
+    }
+
+    @media (max-width: 760px) {
+      .repo-shell { grid-template-columns: 1fr; }
+
+      .feed-card:not(.intro-card) .repo-main {
+        padding: 22px 86px 82px 18px;
+      }
+
+      .repo-topline { min-height: 34px; }
+
+      .side-actions {
+        position: absolute;
+        z-index: 6;
+        top: auto;
+        right: 8px;
+        bottom: 78px;
+        left: auto;
+        width: 68px;
+        height: auto;
+        max-height: calc(100% - 92px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 9px;
+        padding: 8px 4px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        backdrop-filter: none;
+        overflow: visible;
+      }
+
+      .creator-profile {
+        gap: 4px;
+        font-size: .61rem;
+        filter: drop-shadow(0 2px 8px var(--bg));
+      }
+
+      .creator-avatar-frame {
+        width: 52px;
+        height: 52px;
+        padding: 2px;
+        box-shadow: 0 8px 22px color-mix(in srgb, var(--primary) 32%, transparent);
+      }
+
+      .creator-avatar { border-width: 2px; }
+      .creator-handle { max-width: 64px; }
+
+      .side-actions .stat-action {
+        flex-direction: column;
+        gap: 3px;
+        font-size: .65rem;
+        text-shadow: 0 1px 9px var(--bg);
+      }
+
+      .side-actions .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+        box-shadow: 0 7px 20px rgba(0, 0, 0, .2);
+      }
+
+      .side-actions .open-action .stat-icon {
+        background: linear-gradient(145deg, var(--primary), var(--primary-strong) 72%, color-mix(in srgb, var(--primary-2) 28%, var(--primary-strong)));
+      }
+
+      .side-actions .stat-action > span:last-child {
+        color: var(--text);
+        text-shadow: 0 1px 9px var(--bg);
+      }
+
+      .feed-card:not(.intro-card) .repo-actions {
+        left: 16px;
+        right: 78px;
+        bottom: 14px;
+        flex-wrap: nowrap;
+      }
+
+      .feed-card:not(.intro-card) .repo-actions .secondary-button {
+        width: auto;
+        min-width: 0;
+        flex: 1 1 0;
+        padding-inline: 12px;
+      }
+
+      .feed-card:not(.intro-card) .repo-actions .secondary-button .button-label {
+        display: inline;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .feed-card:not(.intro-card) .repo-main {
+        padding: 18px 78px 76px 15px;
+      }
+
+      .feed-card:not(.intro-card) .repo-title {
+        font-size: clamp(1.78rem, 10vw, 2.78rem);
+        line-height: .98;
+      }
+
+      .side-actions {
+        right: 5px;
+        bottom: 72px;
+        width: 64px;
+        gap: 7px;
+      }
+
+      .creator-avatar-frame { width: 48px; height: 48px; }
+      .side-actions .stat-icon { width: 41px; height: 41px; }
+      .side-actions .stat-icon svg { width: 19px; height: 19px; }
+
+      .feed-card:not(.intro-card) .repo-actions {
+        left: 13px;
+        right: 70px;
+        bottom: 12px;
+        gap: 6px;
+      }
+
+      .feed-card:not(.intro-card) .repo-actions .secondary-button {
+        min-height: 44px;
+        padding-inline: 8px;
+        font-size: .75rem;
+      }
+    }
+
+    @media (max-width: 340px) {
+      .feed-card:not(.intro-card) .repo-main {
+        padding-right: 70px;
+      }
+      .side-actions { right: 3px; width: 60px; gap: 5px; }
+      .creator-avatar-frame { width: 44px; height: 44px; }
+      .creator-handle { display: none; }
+      .side-actions .stat-icon { width: 37px; height: 37px; }
+      .side-actions .stat-action { font-size: .58rem; }
+      .feed-card:not(.intro-card) .repo-actions { right: 64px; }
+      .feed-card:not(.intro-card) .repo-actions .secondary-button .button-label { display: none; }
+    }
+
+    @media (orientation: landscape) and (max-height: 540px) {
+      .repo-shell { grid-template-columns: minmax(0, 1fr) 76px; }
+      .feed-card:not(.intro-card) .repo-main { padding: 14px 18px; }
+      .side-actions {
+        position: static;
+        width: auto;
+        max-height: none;
+        justify-content: center;
+        gap: 5px;
+        padding: 6px 4px;
+        border-left: 1px solid var(--line);
+        background: color-mix(in srgb, var(--surface-2) 62%, transparent);
+      }
+      .creator-profile { gap: 2px; font-size: .55rem; }
+      .creator-avatar-frame { width: 38px; height: 38px; }
+      .creator-handle { display: none; }
+      .side-actions .stat-icon { width: 34px; height: 34px; }
+      .side-actions .stat-icon svg { width: 16px; height: 16px; }
+      .side-actions .stat-action { font-size: .55rem; }
+      .feed-card:not(.intro-card) .repo-actions {
+        position: static;
+        margin-top: auto;
+      }
+    }
+
+
+    /* Animated ambient background: subtle motion behind the repository feed. */
+    body {
+      position: relative;
+      isolation: isolate;
+      background: var(--bg);
+    }
+
+    .ambient-background {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      contain: strict;
+      background:
+        radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--primary) 5%, transparent), transparent 46%),
+        linear-gradient(145deg, var(--bg), color-mix(in srgb, var(--bg) 91%, var(--bg-soft)));
+    }
+
+    .ambient-orb,
+    .ambient-grid,
+    .ambient-dots {
+      position: absolute;
+      display: block;
+      will-change: transform, opacity;
+    }
+
+    .ambient-orb {
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: .5;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .ambient-orb-one {
+      top: -24%;
+      left: -17%;
+      width: min(70vw, 900px);
+      aspect-ratio: 1;
+      background: radial-gradient(circle at 42% 40%, color-mix(in srgb, var(--primary) 48%, transparent), transparent 66%);
+      animation: ambientOrbOne 18s ease-in-out infinite alternate;
+    }
+
+    .ambient-orb-two {
+      right: -22%;
+      bottom: -28%;
+      width: min(74vw, 980px);
+      aspect-ratio: 1;
+      background: radial-gradient(circle at 48% 48%, color-mix(in srgb, var(--primary-2) 34%, transparent), transparent 68%);
+      animation: ambientOrbTwo 22s ease-in-out infinite alternate;
+    }
+
+    .ambient-orb-three {
+      top: 24%;
+      right: 16%;
+      width: min(42vw, 560px);
+      aspect-ratio: 1;
+      opacity: .27;
+      background: radial-gradient(circle, color-mix(in srgb, var(--primary) 30%, var(--primary-2) 16%), transparent 67%);
+      animation: ambientOrbThree 15s ease-in-out infinite alternate;
+    }
+
+    .ambient-grid {
+      inset: -48%;
+      opacity: .085;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--primary) 30%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--primary-2) 24%, transparent) 1px, transparent 1px);
+      background-size: 74px 74px;
+      mask-image: radial-gradient(circle at center, black 12%, rgba(0, 0, 0, .72) 45%, transparent 73%);
+      transform: perspective(900px) rotateX(58deg) rotateZ(-10deg) translate3d(0, 0, 0);
+      transform-origin: center;
+      animation: ambientGridDrift 32s linear infinite;
+    }
+
+    .ambient-dots {
+      inset: -12%;
+      opacity: .12;
+      background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 48%, transparent) 1px, transparent 1.5px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(ellipse at center, black, transparent 76%);
+      animation: ambientDotsDrift 26s linear infinite;
+    }
+
+    .feed {
+      z-index: 1;
+      background: transparent;
+    }
+
+    .feed-card::before {
+      animation: feedAmbientPulse 10s ease-in-out infinite alternate;
+      will-change: transform, opacity;
+    }
+
+    .repo-shell::after {
+      z-index: 0;
+      opacity: .68;
+      background:
+        radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 38%),
+        radial-gradient(circle at 88% 84%, color-mix(in srgb, var(--primary-2) 13%, transparent), transparent 42%),
+        linear-gradient(112deg, transparent 18%, rgba(255, 255, 255, .045) 46%, transparent 72%);
+      background-size: 145% 145%, 150% 150%, 220% 100%;
+      animation: cardAmbientSheen 13s ease-in-out infinite alternate;
+      will-change: background-position, opacity;
+    }
+
+    .repo-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .side-actions { z-index: 1; }
+
+    html[data-theme="light"] .ambient-orb { opacity: .3; }
+    html[data-theme="light"] .ambient-grid { opacity: .055; }
+    html[data-theme="light"] .ambient-dots { opacity: .085; }
+    html[data-theme="light"] .repo-shell::after { opacity: .38; }
+
+    @keyframes ambientOrbOne {
+      0%   { transform: translate3d(-4%, -2%, 0) scale(.94); }
+      52%  { transform: translate3d(18%, 12%, 0) scale(1.08); }
+      100% { transform: translate3d(30%, 3%, 0) scale(.98); }
+    }
+
+    @keyframes ambientOrbTwo {
+      0%   { transform: translate3d(3%, 8%, 0) scale(.95); }
+      48%  { transform: translate3d(-16%, -12%, 0) scale(1.07); }
+      100% { transform: translate3d(-29%, -4%, 0) scale(1); }
+    }
+
+    @keyframes ambientOrbThree {
+      0%   { transform: translate3d(10%, -8%, 0) scale(.86); opacity: .18; }
+      55%  { transform: translate3d(-22%, 16%, 0) scale(1.12); opacity: .34; }
+      100% { transform: translate3d(-8%, 30%, 0) scale(.96); opacity: .23; }
+    }
+
+    @keyframes ambientGridDrift {
+      from { transform: perspective(900px) rotateX(58deg) rotateZ(-10deg) translate3d(-37px, -37px, 0); }
+      to   { transform: perspective(900px) rotateX(58deg) rotateZ(-10deg) translate3d(37px, 37px, 0); }
+    }
+
+    @keyframes ambientDotsDrift {
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(34px, -34px, 0); }
+    }
+
+    @keyframes feedAmbientPulse {
+      0%   { transform: translate3d(-3%, -2%, 0) scale(.94); opacity: .58; }
+      100% { transform: translate3d(4%, 3%, 0) scale(1.08); opacity: 1; }
+    }
+
+    @keyframes cardAmbientSheen {
+      0% {
+        background-position: 0% 0%, 100% 100%, -125% 0;
+        opacity: .5;
+      }
+      100% {
+        background-position: 38% 28%, 62% 72%, 125% 0;
+        opacity: .86;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .ambient-orb { filter: blur(22px); }
+      .ambient-orb-one { width: 115vw; top: -18%; left: -46%; }
+      .ambient-orb-two { width: 125vw; right: -58%; bottom: -22%; }
+      .ambient-orb-three { width: 78vw; right: -24%; top: 30%; }
+      .ambient-grid { background-size: 58px 58px; opacity: .07; }
+      .ambient-dots { background-size: 28px 28px; opacity: .1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ambient-orb,
+      .ambient-grid,
+      .ambient-dots,
+      .feed-card::before,
+      .repo-shell::after {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
+
   </style>
 </head>
 <body>
+
+  <div class="ambient-background" aria-hidden="true">
+    <span class="ambient-orb ambient-orb-one"></span>
+    <span class="ambient-orb ambient-orb-two"></span>
+    <span class="ambient-orb ambient-orb-three"></span>
+    <span class="ambient-grid"></span>
+    <span class="ambient-dots"></span>
+  </div>
   <a class="skip-link" href="#feed">Skip to project feed</a>
 
   <header class="app-header" id="appHeader">
     <a class="brand" href="./" aria-label="TikDev home">
       <span class="brand-text">TikDev</span>
     </a>
-
-    <nav class="mode-bar" aria-label="Feed type">
-      <button class="mode-button active" type="button" data-mode="discover">Discover</button>
-      <button class="mode-button" type="button" data-mode="popular">Popular</button>
-      <button class="mode-button" type="button" data-mode="fresh">Fresh</button>
-      <button class="mode-button" type="button" data-mode="saved">Saved</button>
-      <span class="topic-status" id="topicStatus">All development topics</span>
-    </nav>
 
     <form class="search-form" id="searchForm" role="search">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
@@ -1578,6 +2188,14 @@
       </button>
     </div>
   </header>
+
+    <nav class="mode-bar" aria-label="Feed type">
+      <button class="mode-button active" type="button" data-mode="discover">Discover</button>
+      <button class="mode-button" type="button" data-mode="popular">Popular</button>
+      <button class="mode-button" type="button" data-mode="fresh">Fresh</button>
+      <button class="mode-button" type="button" data-mode="saved">Saved</button>
+      <span class="topic-status" id="topicStatus">All development topics</span>
+    </nav>
 
   <main class="feed" id="feed" tabindex="-1" aria-live="polite"></main>
   <div class="position-indicator" id="positionIndicator" aria-hidden="true">1 / 1</div>
@@ -1761,6 +2379,7 @@
     const searchInput = document.getElementById('searchInput');
     const searchClear = document.getElementById('searchClear');
     const appHeader = document.getElementById('appHeader');
+    const modeBar = document.querySelector('.mode-bar');
     const topicStatus = document.getElementById('topicStatus');
     const positionIndicator = document.getElementById('positionIndicator');
     const topicsDialog = document.getElementById('topicsDialog');
@@ -2078,6 +2697,7 @@
       const fullNameRaw = repo.full_name;
       const fullName = escapeHtml(fullNameRaw);
       const repoUrl = safeGithubUrl(repo.html_url);
+      const ownerUrl = safeGithubUrl(repo.owner.html_url || `https://github.com/${repo.owner.login}`);
       const starUrl = `${repoUrl}/stargazers`;
       const forkUrl = `${repoUrl}/fork`;
       const language = repo.language ? escapeHtml(repo.language) : 'Unknown';
@@ -2095,7 +2715,6 @@
             <div class="repo-main">
               ${isPromoted ? '<span class="featured-label"><img src="dedsec-butterfly.png" alt="" width="18" height="18">DedSec Project pick</span>' : ''}
               <div class="repo-topline">
-                <img class="avatar" src="${escapeHtml(repo.owner.avatar_url)}" alt="" width="44" height="44" loading="lazy">
                 <div class="owner-block">
                   <span class="owner-name">${escapeHtml(repo.owner.login)} /</span>
                   <span class="updated">Updated ${escapeHtml(relativeDate(repo.pushed_at || repo.updated_at))}</span>
@@ -2118,13 +2737,16 @@
               <div class="card-spacer"></div>
 
               <div class="repo-actions">
-                <a class="primary-link" href="${repoUrl}" target="_blank" rel="noopener noreferrer">Open repository ${icons.external}</a>
                 <button class="secondary-button" type="button" data-action="readme" data-repo="${fullName}">${icons.book}<span class="button-label">README</span></button>
                 <button class="secondary-button" type="button" data-action="save" data-repo="${fullName}" aria-pressed="${isSaved}">${icons.bookmark}<span class="button-label">${isSaved ? 'Saved' : 'Save'}</span></button>
               </div>
             </div>
 
-            <aside class="side-actions" aria-label="Repository actions">
+            <aside class="side-actions" aria-label="Creator and repository actions">
+              <a class="creator-profile" href="${ownerUrl}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(repo.owner.login)}'s GitHub profile">
+                <span class="creator-avatar-frame"><img class="creator-avatar" src="${escapeHtml(repo.owner.avatar_url)}" alt="" width="62" height="62" loading="lazy"></span>
+                <span class="creator-handle">@${escapeHtml(repo.owner.login)}</span>
+              </a>
               ${isPromoted ? `<button class="stat-action promo-star-button" type="button" data-action="promo-star" data-repo="${fullName}" aria-pressed="${isKnownStarred}" aria-label="${isKnownStarred ? 'Star recorded for' : 'Open GitHub to star'} ${fullNameRaw}; ${repo.stargazers_count} stars" title="${formatNumber(repo.stargazers_count)} stars">
                 <span class="stat-icon star-icon">${icons.star}</span>
                 <span class="button-label">${isKnownStarred ? 'Recorded' : 'Star'}</span>
@@ -2140,6 +2762,10 @@
                 <span class="stat-icon">${icons.share}</span>
                 <span>Share</span>
               </button>
+              <a class="stat-action open-action" href="${repoUrl}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(repo.name)} repository">
+                <span class="stat-icon">${icons.external}</span>
+                <span>Open</span>
+              </a>
             </aside>
           </article>
         </section>`;
@@ -2781,12 +3407,15 @@
     });
 
     function syncNavigationHeight() {
-      const height = Math.ceil(appHeader.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--nav-h', `${height}px`);
+      const headerHeight = Math.ceil(appHeader.getBoundingClientRect().height);
+      const bottomNavigationHeight = Math.ceil(modeBar.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--nav-h', `${headerHeight}px`);
+      document.documentElement.style.setProperty('--bottom-nav-h', `${bottomNavigationHeight}px`);
     }
 
     const navResizeObserver = new ResizeObserver(syncNavigationHeight);
     navResizeObserver.observe(appHeader);
+    navResizeObserver.observe(modeBar);
     addEventListener('resize', syncNavigationHeight, { passive: true });
     syncNavigationHeight();
 
